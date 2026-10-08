@@ -1,3 +1,8 @@
+# Group members:
+- Osama Abuhilal
+- Baqar Almaarfawi
+- Alex Theis
+
 # E-Commerce Platform
 
 A modern, scalable e-commerce website designed to deliver a seamless shopping experience for customers and robust store management for administrators.
