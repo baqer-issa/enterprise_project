@@ -1,36 +1,16 @@
-# E-Commerce Platform
+# React + Vite
 
-A modern, scalable e-commerce website designed to deliver a seamless shopping experience for customers and robust store management for administrators.
+This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
-## Project Overview
+Currently, two official plugins are available:
 
-This repository contains the source code, architecture specifications, and documentation for our new e-commerce application. The platform aims to support product catalog browsing, search and filtering, shopping cart functionality, secure checkout with payment processing, user authentication, and order fulfillment tracking.
+- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
+- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
 
-## Core Features
+## React Compiler
 
-- **Product Catalog & Search**: Category-based browsing, real-time product search, and attribute filtering.
-- **Cart & Checkout**: Persistent cart management, coupon codes, and a streamlined multi-step checkout flow.
-- **User Accounts & Profiles**: Secure sign-up/login, order history, and address book management.
-- **Payment Processing**: Secure transaction handling with major credit cards, digital wallets, and webhooks.
-- **Order Management & Notifications**: Order status updates, customer notifications, and admin fulfillment workflows.
+The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
 
-## Technology Stack
+## Expanding the ESLint configuration
 
-The technology stack is currently being finalized through open architectural decision issues. See our GitHub issues tracker for discussions on:
-- Frontend framework & UI components
-- Backend API and services architecture
-- Primary database and caching layer
-- Authentication and session management
-- Payment gateway integration
-- Cloud infrastructure, deployment, and CI/CD
-
-## Contributing & Development Workflow
-
-To maintain code quality and stability:
-- All changes must be submitted via Pull Requests targeting the `main` branch.
-- **Branch Protection**: Merging into `main` strictly requires approval from at least **two peer reviewers**.
-- Ensure all tests pass and code adheres to project formatting guidelines before requesting review.
-
-## License
-
-This project is licensed under the MIT License.
+If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
