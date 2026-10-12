@@ -1,16 +1,91 @@
-# React + Vite
+# Enterprise Project - Order & Checkout System
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A React application built with **Vite**, **React 19**, and **React Router v6** for managing multi-step product purchasing and checkout flows.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## 📋 Prerequisites
 
-## React Compiler
+Make sure you have **Node.js** (v18.0.0 or higher recommended, e.g., v20+ LTS) and **npm** installed on your system.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+To check your versions:
+```bash
+node -v
+npm -v
+```
 
-## Expanding the ESLint configuration
+> **Note**: If Node.js is not yet installed:
+> - Using **mise**: `mise use --global node@20`
+> - Using **nvm**: `nvm install --lts && nvm use --lts`
+> - Using system package manager (e.g., Arch Linux / Omarchy): `sudo pacman -S nodejs npm`
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+---
+
+## 🚀 Getting Started
+
+### 1. Install Dependencies
+
+In the root directory of the project, install the required packages:
+
+```bash
+npm install
+```
+
+### 2. Start the Development Server
+
+Launch the Vite development server with Hot Module Replacement (HMR):
+
+```bash
+npm run dev
+```
+
+By default, the application runs at:
+```
+http://localhost:5173
+```
+
+Open this URL in your browser. It will automatically redirect to `/purchase`.
+
+---
+
+## 🛠 Available Scripts
+
+In the project directory, you can run:
+
+| Command | Description |
+| :--- | :--- |
+| `npm run dev` | Starts the local dev server at `http://localhost:5173` |
+| `npm run build` | Compiles and bundles production assets into `dist/` |
+| `npm run preview` | Locally serves the production build for verification |
+| `npm run lint` | Runs ESLint to check for code quality and syntax issues |
+
+---
+
+## 🗺 Application Architecture & Flow
+
+### Global State Management
+- **[`OrderContext`](src/OrderContext.jsx)**: Wraps the entire application, tracking:
+  - `cart`: List of chosen catalog items and quantities.
+  - `paymentInfo`: Customer payment credentials.
+  - `shippingInfo`: Customer shipping address and details.
+
+### Routes
+
+| Route | Component | Purpose |
+| :--- | :--- | :--- |
+| `/` | `Navigate` | Redirects directly to `/purchase` |
+| `/purchase` | [`Purchase.jsx`](src/components/Purchase.jsx) | Product catalog with item selection and quantity inputs |
+| `/purchase/paymentEntry` | [`PaymentEntry.jsx`](src/components/PaymentEntry.jsx) | Payment information entry step |
+| `/purchase/shippingEntry` | [`ShippingEntry.jsx`](src/components/ShippingEntry.jsx) | Shipping address and delivery details step |
+| `/purchase/viewOrder` | [`ViewOrder.jsx`](src/components/ViewOrder.jsx) | Summary review before final submission |
+| `/purchase/viewConfirmation` | [`Confirmation.jsx`](src/components/Confirmation.jsx) | Post-purchase confirmation screen |
+
+---
+
+## 📦 Tech Stack
+
+- **React 19**: Modern UI component library
+- **Vite 8**: Next-generation frontend build tooling
+- **React Router DOM 6**: Client-side routing and navigation
+- **React Icons**: Icon library
+- **ESLint 10**: Code linting and style enforcement
