@@ -1,1 +1,24 @@
 @import "tailwindcss";
+
+@theme {
+  --color-retro-dark: #10131e;
+  --color-retro-card: #181d2c;
+  --color-retro-surface: #1b2030;
+  --color-retro-lime: #c3f85c;
+  --color-retro-lime-hover: #b3ea4f;
+  --color-retro-cream: #f3f0e7;
+  --color-retro-lavender: #e8e1f3;
+  --color-retro-purple: #b49bfa;
+  --color-retro-muted: #7e8594;
+  --color-retro-text-muted: #949ba8;
+}
+
+/* Base styles */
+body {
+  background-color: var(--color-retro-dark);
+  color: #ffffff;
+  font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+}
