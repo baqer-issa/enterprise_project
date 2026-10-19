@@ -6,6 +6,8 @@ import PaymentEntry from './components/PaymentEntry';
 import ShippingEntry from './components/ShippingEntry';
 import ViewOrder from './components/ViewOrder';
 import Confirmation from './components/Confirmation';
+import About from './components/About';
+import Contact from './components/Contact';
 
 function App() {
   return (
@@ -18,6 +20,8 @@ function App() {
           <Route path="/purchase/shippingEntry" element={<ShippingEntry />} />
           <Route path="/purchase/viewOrder" element={<ViewOrder />} />
           <Route path="/purchase/viewConfirmation" element={<Confirmation />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/contact" element={<Contact />} />
         </Routes>
       </Router>
     </OrderProvider>
