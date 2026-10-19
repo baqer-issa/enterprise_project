@@ -1,6 +1,8 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { OrderContext } from '../OrderContext';
+import Navbar from './common/Navbar';
+import Footer from './common/Footer';
 
 // Hardcoded catalog to fallback on if cart needs reconstruction from buyQuantity
 const catalog = [
@@ -18,7 +20,6 @@ export default function ViewOrder() {
 
     const order = location.state?.order || {};
 
-    // Determine initial items: check OrderContext first, then order.items, then order.buyQuantity fallback
     const getInitialItems = () => {
         if (cart && cart.length > 0) return cart;
         if (order.items && order.items.length > 0) return order.items;
@@ -33,7 +34,6 @@ export default function ViewOrder() {
 
     const [items, setItems] = useState(getInitialItems);
 
-    // Sync with OrderContext cart whenever it changes externally
     useEffect(() => {
         if (cart && cart.length > 0) {
             setItems(cart);
@@ -56,7 +56,6 @@ export default function ViewOrder() {
         cvvCode: order.cvvCode || paymentInfo.cvvCode || ''
     };
 
-    // Calculate live order total
     const orderTotal = items.reduce((total, item) => total + (item.price * item.quantity), 0);
 
     const maskCardNumber = (num) => {
@@ -66,7 +65,6 @@ export default function ViewOrder() {
         return `•••• •••• •••• ${cleaned.slice(-4)}`;
     };
 
-    // Quantity & Item editing handlers
     const handleIncrement = (id) => {
         const updated = items.map(item =>
             item.id === id ? { ...item, quantity: item.quantity + 1 } : item
@@ -121,7 +119,6 @@ export default function ViewOrder() {
             day: 'numeric'
         });
 
-        // Persist into context
         setPaymentInfo(paymentDetails);
         setShippingInfo(shippingDetails);
         setCart(items);
@@ -150,239 +147,142 @@ export default function ViewOrder() {
     };
 
     return (
-        <div style={{ maxWidth: '850px', margin: '0 auto', padding: '20px', textAlign: 'left' }}>
-            <h1 style={{ textAlign: 'center', marginBottom: '25px' }}>Review Your Order</h1>
+        <div className="min-h-screen bg-[#10131E] text-white flex flex-col font-sans selection:bg-[#C3F85C] selection:text-[#10131E]">
+            <Navbar activePage="cart" />
 
-            {items.length === 0 ? (
-                <div style={{ textAlign: 'center', padding: '50px 20px', border: '1px dashed #ccc', borderRadius: '8px' }}>
-                    <p style={{ fontSize: '20px', marginBottom: '10px', fontWeight: '500' }}>Your order is empty</p>
-                    <p style={{ color: '#666', marginBottom: '20px' }}>All items have been removed or no items were selected.</p>
-                    <button
-                        onClick={() => navigate('/purchase')}
-                        style={{
-                            padding: '12px 24px',
-                            fontSize: '16px',
-                            cursor: 'pointer',
-                            borderRadius: '6px',
-                            backgroundColor: '#0070f3',
-                            color: '#fff',
-                            border: 'none',
-                            fontWeight: 'bold'
-                        }}
-                    >
-                        Return to Catalog
-                    </button>
-                </div>
-            ) : (
-                <div>
-                    {/* Items Section */}
-                    <div style={{ border: '1px solid #ccc', borderRadius: '8px', padding: '20px', marginBottom: '20px' }}>
-                        <h2 style={{ borderBottom: '1px solid #eee', paddingBottom: '10px' }}>Order Items</h2>
+            <main className="flex-grow w-full max-w-4xl mx-auto px-4 py-8">
+                <h1 className="text-3xl font-bold text-center mb-8">Review Your Order</h1>
 
-                        <div style={{ display: 'grid', gap: '15px', marginTop: '15px' }}>
-                            {items.map((item) => (
-                                <div
-                                    key={item.id}
-                                    style={{
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                        justifyContent: 'space-between',
-                                        borderBottom: '1px solid #f0f0f0',
-                                        paddingBottom: '12px',
-                                        flexWrap: 'wrap',
-                                        gap: '15px'
-                                    }}
-                                >
-                                    {/* Item Image and Title */}
-                                    <div style={{ display: 'flex', alignItems: 'center', gap: '15px', minWidth: '220px', flex: '1 1 200px' }}>
-                                        {item.image && (
-                                            <img
-                                                src={item.image}
-                                                alt={item.name}
-                                                style={{ width: '60px', height: '60px', objectFit: 'cover', borderRadius: '4px' }}
-                                            />
-                                        )}
-                                        <div>
-                                            <strong style={{ fontSize: '16px', display: 'block' }}>{item.name}</strong>
-                                            <span style={{ color: '#666', fontSize: '14px' }}>
-                                                ${item.price.toFixed(2)} each
-                                            </span>
+                {items.length === 0 ? (
+                    <div className="text-center p-12 border border-dashed border-gray-600 rounded-lg bg-gray-900/50">
+                        <p className="text-2xl mb-2 font-medium">Your order is empty</p>
+                        <p className="text-gray-400 mb-6">All items have been removed or no items were selected.</p>
+                        <button
+                            onClick={() => navigate('/purchase')}
+                            className="bg-[#C3F85C] text-[#10131E] font-bold px-6 py-3 rounded-md hover:bg-[#aee645] transition-colors"
+                        >
+                            Return to Catalog
+                        </button>
+                    </div>
+                ) : (
+                    <div className="space-y-6">
+                        {/* Items Section */}
+                        <div className="border border-gray-700 bg-gray-800/40 rounded-xl p-6">
+                            <h2 className="text-xl font-semibold border-b border-gray-700 pb-4 mb-4">Order Items</h2>
+
+                            <div className="space-y-4">
+                                {items.map((item) => (
+                                    <div key={item.id} className="flex flex-wrap items-center justify-between border-b border-gray-700/50 pb-4 gap-4">
+
+                                        <div className="flex items-center gap-4 flex-1 min-w-[200px]">
+                                            {item.image && (
+                                                <img src={item.image} alt={item.name} className="w-16 h-16 object-cover rounded-md" />
+                                            )}
+                                            <div>
+                                                <strong className="text-lg block">{item.name}</strong>
+                                                <span className="text-gray-400 text-sm">${item.price.toFixed(2)} each</span>
+                                            </div>
                                         </div>
-                                    </div>
 
-                                    {/* Quantity Editing Controls & Actions */}
-                                    <div style={{ display: 'flex', alignItems: 'center', gap: '15px', flexWrap: 'wrap' }}>
-                                        {/* Quantity Stepper */}
-                                        <div style={{
-                                            display: 'inline-flex',
-                                            alignItems: 'center',
-                                            border: '1px solid #bbb',
-                                            borderRadius: '6px',
-                                            overflow: 'hidden'
-                                        }}>
+                                        <div className="flex items-center gap-6 flex-wrap">
+                                            <div className="flex items-center border border-gray-600 rounded-md overflow-hidden bg-gray-900">
+                                                <button type="button" onClick={() => handleDecrement(item.id)} className="px-3 py-1 bg-gray-700 hover:bg-gray-600 text-white font-bold transition-colors">−</button>
+                                                <input
+                                                    type="number"
+                                                    min="1"
+                                                    value={item.quantity}
+                                                    onChange={(e) => handleQuantityChange(item.id, e.target.value)}
+                                                    className="w-12 text-center bg-transparent border-none focus:outline-none text-white appearance-none"
+                                                />
+                                                <button type="button" onClick={() => handleIncrement(item.id)} className="px-3 py-1 bg-gray-700 hover:bg-gray-600 text-white font-bold transition-colors">+</button>
+                                            </div>
+
+                                            <div className="w-20 text-right">
+                                                <strong className="text-lg">${(item.price * item.quantity).toFixed(2)}</strong>
+                                            </div>
+
                                             <button
                                                 type="button"
-                                                onClick={() => handleDecrement(item.id)}
-                                                title="Decrease quantity"
-                                                style={{
-                                                    padding: '6px 12px',
-                                                    border: 'none',
-                                                    background: '#f2f2f2',
-                                                    cursor: 'pointer',
-                                                    fontSize: '16px',
-                                                    fontWeight: 'bold'
-                                                }}
+                                                onClick={() => handleCancelItem(item.id)}
+                                                className="px-3 py-1 text-sm font-medium text-red-400 border border-red-400/50 rounded-md hover:bg-red-400 hover:text-white transition-colors"
                                             >
-                                                −
-                                            </button>
-                                            <input
-                                                type="number"
-                                                min="1"
-                                                value={item.quantity}
-                                                onChange={(e) => handleQuantityChange(item.id, e.target.value)}
-                                                style={{
-                                                    width: '45px',
-                                                    textAlign: 'center',
-                                                    border: 'none',
-                                                    padding: '6px 0',
-                                                    fontSize: '15px',
-                                                    outline: 'none'
-                                                }}
-                                            />
-                                            <button
-                                                type="button"
-                                                onClick={() => handleIncrement(item.id)}
-                                                title="Increase quantity"
-                                                style={{
-                                                    padding: '6px 12px',
-                                                    border: 'none',
-                                                    background: '#f2f2f2',
-                                                    cursor: 'pointer',
-                                                    fontSize: '16px',
-                                                    fontWeight: 'bold'
-                                                }}
-                                            >
-                                                +
+                                                Cancel Item
                                             </button>
                                         </div>
-
-                                        {/* Line Total */}
-                                        <div style={{ minWidth: '80px', textAlign: 'right' }}>
-                                            <strong style={{ fontSize: '16px' }}>
-                                                ${(item.price * item.quantity).toFixed(2)}
-                                            </strong>
-                                        </div>
-
-                                        {/* Cancel Item Button */}
-                                        <button
-                                            type="button"
-                                            onClick={() => handleCancelItem(item.id)}
-                                            title="Cancel and remove this item from the order"
-                                            style={{
-                                                padding: '6px 12px',
-                                                fontSize: '13px',
-                                                color: '#dc3545',
-                                                backgroundColor: '#fff',
-                                                border: '1px solid #dc3545',
-                                                borderRadius: '4px',
-                                                cursor: 'pointer',
-                                                fontWeight: '500'
-                                            }}
-                                            onMouseOver={(e) => {
-                                                e.currentTarget.style.backgroundColor = '#dc3545';
-                                                e.currentTarget.style.color = '#fff';
-                                            }}
-                                            onMouseOut={(e) => {
-                                                e.currentTarget.style.backgroundColor = '#fff';
-                                                e.currentTarget.style.color = '#dc3545';
-                                            }}
-                                        >
-                                            Cancel Item
-                                        </button>
                                     </div>
+                                ))}
+                            </div>
+
+                            <div className="text-right mt-6 pt-4 border-t border-gray-700">
+                                <h2 className="text-2xl font-bold text-[#C3F85C]">
+                                    Total: ${orderTotal.toFixed(2)}
+                                </h2>
+                            </div>
+                        </div>
+
+                        {/* Shipping & Payment Summaries */}
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div className="border border-gray-700 bg-gray-800/40 rounded-xl p-6">
+                                <div className="flex justify-between items-center border-b border-gray-700 pb-3 mb-4">
+                                    <h3 className="text-lg font-semibold">Shipping Information</h3>
+                                    <button
+                                        type="button"
+                                        onClick={() => navigate('/purchase/shippingEntry', { state: { order: { ...order, ...shippingDetails, ...paymentDetails, items } } })}
+                                        className="text-sm text-[#C3F85C] hover:underline"
+                                    >
+                                        Edit
+                                    </button>
                                 </div>
-                            ))}
-                        </div>
-
-                        {/* Subtotal & Total Display */}
-                        <div style={{ textAlign: 'right', marginTop: '20px', borderTop: '1px solid #eee', paddingTop: '15px' }}>
-                            <h2 style={{ margin: 0, fontSize: '22px' }}>
-                                Total: ${orderTotal.toFixed(2)}
-                            </h2>
-                        </div>
-                    </div>
-
-                    {/* Shipping & Payment Summaries */}
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '20px', marginBottom: '25px' }}>
-                        {/* Shipping Details */}
-                        <div style={{ border: '1px solid #ccc', borderRadius: '8px', padding: '18px' }}>
-                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid #eee', paddingBottom: '8px' }}>
-                                <h3 style={{ margin: 0 }}>Shipping Information</h3>
-                                <button
-                                    type="button"
-                                    onClick={() => navigate('/purchase/shippingEntry', { state: { order: { ...order, ...shippingDetails, ...paymentDetails, items } } })}
-                                    style={{ background: 'none', border: 'none', color: '#0066cc', cursor: 'pointer', textDecoration: 'underline' }}
-                                >
-                                    Edit
-                                </button>
+                                <div className="text-gray-300 leading-relaxed space-y-1">
+                                    <p><strong className="text-white">Name:</strong> {shippingDetails.name || 'Not provided'}</p>
+                                    <p><strong className="text-white">Address:</strong> {shippingDetails.addressLine1 || 'Not provided'}</p>
+                                    {shippingDetails.addressLine2 && <p><strong className="text-white">Line 2:</strong> {shippingDetails.addressLine2}</p>}
+                                    <p><strong className="text-white">City, State, Zip:</strong> {shippingDetails.city ? `${shippingDetails.city}, ${shippingDetails.state} ${shippingDetails.zip}` : 'Not provided'}</p>
+                                </div>
                             </div>
-                            <div style={{ marginTop: '12px', lineHeight: '1.6' }}>
-                                <p><strong>Name:</strong> {shippingDetails.name || 'Not provided'}</p>
-                                <p><strong>Address:</strong> {shippingDetails.addressLine1 || 'Not provided'}</p>
-                                {shippingDetails.addressLine2 && <p><strong>Line 2:</strong> {shippingDetails.addressLine2}</p>}
-                                <p><strong>City, State, Zip:</strong> {shippingDetails.city ? `${shippingDetails.city}, ${shippingDetails.state} ${shippingDetails.zip}` : 'Not provided'}</p>
+
+                            <div className="border border-gray-700 bg-gray-800/40 rounded-xl p-6">
+                                <div className="flex justify-between items-center border-b border-gray-700 pb-3 mb-4">
+                                    <h3 className="text-lg font-semibold">Payment Information</h3>
+                                    <button
+                                        type="button"
+                                        onClick={() => navigate('/purchase/paymentEntry', { state: { order: { ...order, ...shippingDetails, ...paymentDetails, items } } })}
+                                        className="text-sm text-[#C3F85C] hover:underline"
+                                    >
+                                        Edit
+                                    </button>
+                                </div>
+                                <div className="text-gray-300 leading-relaxed space-y-1">
+                                    <p><strong className="text-white">Cardholder:</strong> {paymentDetails.card_holder_name || 'Not provided'}</p>
+                                    <p><strong className="text-white">Card Number:</strong> {maskCardNumber(paymentDetails.credit_card_number)}</p>
+                                    <p><strong className="text-white">Expiration:</strong> {paymentDetails.expir_date || 'Not provided'}</p>
+                                </div>
                             </div>
                         </div>
 
-                        {/* Payment Details */}
-                        <div style={{ border: '1px solid #ccc', borderRadius: '8px', padding: '18px' }}>
-                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid #eee', paddingBottom: '8px' }}>
-                                <h3 style={{ margin: 0 }}>Payment Information</h3>
-                                <button
-                                    type="button"
-                                    onClick={() => navigate('/purchase/paymentEntry', { state: { order: { ...order, ...shippingDetails, ...paymentDetails, items } } })}
-                                    style={{ background: 'none', border: 'none', color: '#0066cc', cursor: 'pointer', textDecoration: 'underline' }}
-                                >
-                                    Edit
-                                </button>
-                            </div>
-                            <div style={{ marginTop: '12px', lineHeight: '1.6' }}>
-                                <p><strong>Cardholder:</strong> {paymentDetails.card_holder_name || 'Not provided'}</p>
-                                <p><strong>Card Number:</strong> {maskCardNumber(paymentDetails.credit_card_number)}</p>
-                                <p><strong>Expiration:</strong> {paymentDetails.expir_date || 'Not provided'}</p>
-                            </div>
+                        {/* Navigation Buttons */}
+                        <div className="flex justify-between items-center pt-4">
+                            <button
+                                type="button"
+                                onClick={() => navigate('/purchase/shippingEntry', { state: { order: { ...order, ...shippingDetails, ...paymentDetails, items } } })}
+                                className="px-6 py-3 font-medium border border-gray-600 rounded-md hover:bg-gray-800 transition-colors"
+                            >
+                                Back to Shipping
+                            </button>
+
+                            <button
+                                type="button"
+                                onClick={handleConfirmOrder}
+                                className="px-8 py-3 font-bold text-[#10131E] bg-[#C3F85C] rounded-md hover:bg-[#aee645] transition-colors"
+                            >
+                                Place Order (${orderTotal.toFixed(2)})
+                            </button>
                         </div>
                     </div>
+                )}
+            </main>
 
-                    {/* Navigation Buttons */}
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '20px' }}>
-                        <button
-                            type="button"
-                            onClick={() => navigate('/purchase/shippingEntry', { state: { order: { ...order, ...shippingDetails, ...paymentDetails, items } } })}
-                            style={{ padding: '10px 20px', fontSize: '16px', cursor: 'pointer', borderRadius: '6px' }}
-                        >
-                            Back to Shipping
-                        </button>
-
-                        <button
-                            type="button"
-                            onClick={handleConfirmOrder}
-                            style={{
-                                padding: '12px 28px',
-                                fontSize: '16px',
-                                fontWeight: 'bold',
-                                color: '#fff',
-                                backgroundColor: '#28a745',
-                                border: 'none',
-                                borderRadius: '6px',
-                                cursor: 'pointer'
-                            }}
-                        >
-                            Place Order (${orderTotal.toFixed(2)})
-                        </button>
-                    </div>
-                </div>
-            )}
+            <Footer />
         </div>
     );
 }
