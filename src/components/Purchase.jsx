@@ -299,7 +299,7 @@ export default function Purchase() {
                             {product.name}
                           </h3>
                           <span className="text-lg font-bold text-[#C3F85C] font-mono">
-                            \${product.price.toFixed(2)}
+                            ${product.price.toFixed(2)}
                           </span>
                         </div>
 
@@ -409,7 +409,7 @@ export default function Purchase() {
                               </span>
                             </td>
                             <td className="py-4 px-4 text-right font-mono text-[#C3F85C] font-semibold">
-                              \${item.price.toFixed(2)}
+                              ${item.price.toFixed(2)}
                             </td>
                             <td className="py-4 px-6 text-center">
                               <input
@@ -422,7 +422,7 @@ export default function Purchase() {
                               />
                             </td>
                             <td className="py-4 px-6 text-right font-mono font-bold text-white">
-                              \${(item.price * qty).toFixed(2)}
+                              ${(item.price * qty).toFixed(2)}
                             </td>
                           </tr>
                         );
@@ -467,14 +467,14 @@ export default function Purchase() {
                         <div className="min-w-0">
                           <h4 className="text-sm font-bold text-white truncate">{item.name}</h4>
                           <p className="text-xs text-[#949BA8] font-mono">
-                            \${item.price.toFixed(2)} × {item.quantity}
+                            ${item.price.toFixed(2)} × {item.quantity}
                           </p>
                         </div>
                       </div>
 
                       <div className="flex items-center gap-2 shrink-0">
                         <span className="text-sm font-mono font-bold text-[#C3F85C]">
-                          \${(item.price * item.quantity).toFixed(2)}
+                          ${(item.price * item.quantity).toFixed(2)}
                         </span>
                         <button
                           type="button"
@@ -499,7 +499,7 @@ export default function Purchase() {
                 <div className="flex justify-between text-base font-bold text-white pt-2">
                   <span>Estimated Total</span>
                   <span className="font-mono text-xl text-[#C3F85C]">
-                    \${subtotal.toFixed(2)}
+                    ${subtotal.toFixed(2)}
                   </span>
                 </div>
               </div>
