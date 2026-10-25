@@ -7,9 +7,7 @@ import Footer from './common/Footer';
 import CheckoutSteps from './checkout/CheckoutSteps';
 import CheckoutOrderSummary from './checkout/CheckoutOrderSummary';
 
-// Replace with Osama's actual AWS API Gateway POST URL
-const ORDER_API_URL = 'https://0idxgsmohh.execute-api.us-east-1.amazonaws.com/dev/order-processing/order';
-
+const ORDER_API_URL = `${process.env.REACT_APP_AWS_API_URL}/order-processing/order`;
 export default function ViewOrder() {
   const location = useLocation();
   const navigate = useNavigate();

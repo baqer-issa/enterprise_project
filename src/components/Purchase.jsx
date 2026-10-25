@@ -7,8 +7,7 @@ import { OrderContext } from '../OrderContext';
 import Navbar from './common/Navbar';
 import Footer from './common/Footer';
 
-const INVENTORY_API_URL = 'https://0idxgsmohh.execute-api.us-east-1.amazonaws.com/dev/inventory-management/inventory';
-export default function Purchase() {
+const INVENTORY_API_URL = `${process.env.REACT_APP_AWS_API_URL}/inventory-management/inventory`;export default function Purchase() {
   const { cart, setCart } = useContext(OrderContext);
   const navigate = useNavigate();
   
