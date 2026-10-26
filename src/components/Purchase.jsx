@@ -7,9 +7,12 @@ import { OrderContext } from '../OrderContext';
 import Navbar from './common/Navbar';
 import Footer from './common/Footer';
 
-const INVENTORY_API_URL = `${process.env.REACT_APP_AWS_API_URL}/inventory-management/inventory`;export default function Purchase() {
-  const { cart, setCart } = useContext(OrderContext);
+const INVENTORY_API_URL = `${import.meta.env.VITE_AWS_API_URL}/inventory-management/inventory`;
+
+export default function Purchase() {
   const navigate = useNavigate();
+  
+  const { cart, setCart } = useContext(OrderContext) || { cart: [], setCart: () => {} };
   
   const [catalog, setCatalog] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -20,7 +23,9 @@ const INVENTORY_API_URL = `${process.env.REACT_APP_AWS_API_URL}/inventory-manage
     const fetchInventory = async () => {
       try {
         const response = await axios.get(INVENTORY_API_URL);
-        setCatalog(response.data);
+        // Parse the stringified body array from the Lambda proxy response
+        const itemsArray = JSON.parse(response.data.body);
+        setCatalog(itemsArray);
         setIsLoading(false);
       } catch (error) {
         console.error('Error fetching inventory:', error);
@@ -45,7 +50,8 @@ const INVENTORY_API_URL = `${process.env.REACT_APP_AWS_API_URL}/inventory-manage
     const selectedItems = catalog
       .map((item) => ({ ...item, quantity: quantities[item.id] || 0 }))
       .filter((item) => item.quantity > 0);
-    setCart(selectedItems);
+    
+    if (setCart) setCart(selectedItems);
   }, [quantities, catalog, setCart]);
 
   const handleQuantityChange = (id, value) => {
@@ -76,7 +82,7 @@ const INVENTORY_API_URL = `${process.env.REACT_APP_AWS_API_URL}/inventory-manage
       return;
     }
 
-    setCart(selectedItems);
+    if (setCart) setCart(selectedItems);
     const buyQuantity = catalog.map((item) => quantities[item.id] || 0);
     navigate('/purchase/paymentEntry', {
       state: {
@@ -148,6 +154,13 @@ const INVENTORY_API_URL = `${process.env.REACT_APP_AWS_API_URL}/inventory-manage
                     const qty = quantities[product.id] || 0;
                     return (
                       <div key={product.id} className="bg-[#121622] border border-white/10 rounded-2xl overflow-hidden p-5 flex flex-col">
+                        
+                        <img 
+                          src={product.image} 
+                          alt={product.name} 
+                          className="w-full h-48 object-contain rounded-xl mb-4 bg-black/20" 
+                        />
+                        
                         <div className="flex items-baseline justify-between gap-2">
                           <h3 className="text-lg font-bold text-white tracking-tight">{product.name}</h3>
                           <span className="text-lg font-bold text-[#C3F85C] font-mono">${product.price?.toFixed(2) || product.price}</span>

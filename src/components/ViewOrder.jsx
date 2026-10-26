@@ -7,7 +7,8 @@ import Footer from './common/Footer';
 import CheckoutSteps from './checkout/CheckoutSteps';
 import CheckoutOrderSummary from './checkout/CheckoutOrderSummary';
 
-const ORDER_API_URL = `${process.env.REACT_APP_AWS_API_URL}/order-processing/order`;
+const ORDER_API_URL = `${import.meta.env.VITE_AWS_API_URL}/order-processing/order`;
+
 export default function ViewOrder() {
   const location = useLocation();
   const navigate = useNavigate();
