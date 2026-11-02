@@ -38,23 +38,34 @@ export default function CheckoutOrderSummary() {
 
       {/* Items list */}
       <div className="space-y-4 mb-6">
-        {items.map((item, idx) => (
-          <div key={item.id || idx} className="flex items-center gap-3.5">
-            <img
-              src={item.image || '/images/snes-mario.png'}
-              alt={item.name}
-              className="w-12 h-12 rounded-lg object-cover bg-stone-100 border border-stone-200/60 shrink-0"
-            />
-            <div className="flex-grow min-w-0">
-              <h3 className="text-sm font-bold text-[#10131E] truncate">
-                {item.name}
-              </h3>
-              <p className="text-xs text-[#7E8594] mt-0.5">
-                Qty {item.quantity || 1} · ${(item.price * (item.quantity || 1)).toFixed(2)}
-              </p>
+        {items.map((item, idx) => {
+          // Force the correct local image path based on the product name
+          let correctImage = item.image;
+          const name = (item.name || "").toLowerCase();
+          if (name.includes("n64") || name.includes("nintendo 64")) correctImage = "/images/n64-console.png";
+          else if (name.includes("snes") || name.includes("mario") || name.includes("super")) correctImage = "/images/snes-mario.png";
+          else if (name.includes("ps1") || name.includes("playstation")) correctImage = "/images/ps1-console.png";
+          else if (name.includes("genesis") || name.includes("sonic")) correctImage = "/images/genesis-sonic.png";
+          else if (name.includes("gameboy") || name.includes("pokemon") || name.includes("pokémon") || name.includes("game boy")) correctImage = "/images/gameboy-pokemon.png";
+
+          return (
+            <div key={item.id || idx} className="flex items-center gap-3.5">
+              <img
+                src={correctImage || '/images/snes-mario.png'}
+                alt={item.name}
+                className="w-12 h-12 rounded-lg object-cover bg-stone-100 border border-stone-200/60 shrink-0"
+              />
+              <div className="flex-grow min-w-0">
+                <h3 className="text-sm font-bold text-[#10131E] truncate">
+                  {item.name}
+                </h3>
+                <p className="text-xs text-[#7E8594] mt-0.5">
+                  Qty {item.quantity || 1} · ${(item.price * (item.quantity || 1)).toFixed(2)}
+                </p>
+              </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
 
       {/* Cost breakdown */}
@@ -99,4 +110,3 @@ export default function CheckoutOrderSummary() {
     </div>
   );
 }
-

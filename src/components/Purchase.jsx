@@ -152,11 +152,16 @@ export default function Purchase() {
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                   {filteredCatalog.map((product) => {
                     const qty = quantities[product.id] || 0;
+                    
+                    // Force the correct local image path based on the product name
+                    let correctImage = product.image;
+                    const name = (product.name || "").toLowerCase();
+                    
                     return (
                       <div key={product.id} className="bg-[#121622] border border-white/10 rounded-2xl overflow-hidden p-5 flex flex-col">
                         
                         <img 
-                          src={product.image} 
+                          src={correctImage} 
                           alt={product.name} 
                           className="w-full h-48 object-contain rounded-xl mb-4 bg-black/20" 
                         />
