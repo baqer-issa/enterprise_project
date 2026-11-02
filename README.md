@@ -75,7 +75,7 @@ Before running the application, you must create a `.env` file in the root direct
 Add the following line to your `.env` file:
 
 ```env
-VITE_AWS_API_URL=https://0idxgsmohh.execute-api.us-east-1.amazonaws.com/dev
+
 
 ```
 
