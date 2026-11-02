@@ -11,7 +11,7 @@ export default function Navbar({ activePage = 'home' }) {
   // Calculate cart count: if items exist in context, count them, otherwise prototype displays 3
   const contextCount = cart && cart.length > 0 
     ? cart.reduce((total, item) => total + (item.quantity || 1), 0) 
-    : 3;
+    : 0;
 
   return (
     <header className="w-full bg-[#10131E] text-white border-b border-white/5 sticky top-0 z-50">
@@ -112,13 +112,13 @@ export default function Navbar({ activePage = 'home' }) {
 
         {/* Right Action Icons: Search & Cart */}
         <div className="flex items-center gap-4 sm:gap-6">
-          <button
+          {/* <button
             type="button"
             aria-label="Search collection"
             className="text-[#949BA8] hover:text-white p-2 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#C3F85C] rounded"
           >
             <FiSearch className="w-5 h-5" />
-          </button>
+          </button> */}
 
           {/* Cart with count badge */}
           <Link

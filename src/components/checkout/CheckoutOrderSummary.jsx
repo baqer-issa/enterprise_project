@@ -1,32 +1,25 @@
 import { useContext } from 'react';
-import { FiLock } from 'react-icons/fi';
+import { FiLock, FiTrash2 } from 'react-icons/fi';
 import { OrderContext } from '../../OrderContext';
 
 export default function CheckoutOrderSummary() {
-  const { cart } = useContext(OrderContext) || { cart: [] };
+  const { cart, setCart, removeFromCart } = useContext(OrderContext) || { cart: [] };
 
-  // Prototype default sample items if cart is not yet populated
-  const defaultItems = [
-    {
-      id: 1,
-      name: 'Super Mario World',
-      price: 34.99,
-      quantity: 2,
-      image: '/images/snes-mario.png',
-    },
-    {
-      id: 2,
-      name: 'Nintendo 64',
-      price: 119.99,
-      quantity: 1,
-      image: '/images/n64-console.png',
-    },
-  ];
+  const items = cart || [];
 
-  const items = cart && cart.length > 0 ? cart : defaultItems;
+  const handleRemove = (itemId) => {
+    if (removeFromCart) {
+      removeFromCart(itemId);
+    } else if (setCart) {
+      setCart((prev) => prev.filter((item) => item.id !== itemId));
+    }
+  };
 
-  const subtotal = items.reduce((acc, item) => acc + (item.price * (item.quantity || 1)), 0);
-  const shipping = 6.95;
+  const subtotal = items.reduce(
+    (acc, item) => acc + (Number(item.price) || 0) * (item.quantity || 1),
+    0
+  );
+  const shipping = items.length > 0 ? 6.95 : 0;
   const tax = Number((subtotal * 0.08).toFixed(2));
   const total = (subtotal + shipping + tax).toFixed(2);
 
@@ -38,34 +31,42 @@ export default function CheckoutOrderSummary() {
 
       {/* Items list */}
       <div className="space-y-4 mb-6">
-        {items.map((item, idx) => {
-          // Force the correct local image path based on the product name
-          let correctImage = item.image;
-          const name = (item.name || "").toLowerCase();
-          if (name.includes("n64") || name.includes("nintendo 64")) correctImage = "/images/n64-console.png";
-          else if (name.includes("snes") || name.includes("mario") || name.includes("super")) correctImage = "/images/snes-mario.png";
-          else if (name.includes("ps1") || name.includes("playstation")) correctImage = "/images/ps1-console.png";
-          else if (name.includes("genesis") || name.includes("sonic")) correctImage = "/images/genesis-sonic.png";
-          else if (name.includes("gameboy") || name.includes("pokemon") || name.includes("pokémon") || name.includes("game boy")) correctImage = "/images/gameboy-pokemon.png";
-
-          return (
-            <div key={item.id || idx} className="flex items-center gap-3.5">
+        {items.length === 0 ? (
+          <p className="text-sm text-[#7E8594] italic">Your cart is empty.</p>
+        ) : (
+          items.map((item, idx) => (
+            <div key={item.id || idx} className="flex items-center gap-3.5 group">
               <img
-                src={correctImage || '/images/snes-mario.png'}
+                src={item.image || '/images/logo-icon.png'}
                 alt={item.name}
-                className="w-12 h-12 rounded-lg object-cover bg-stone-100 border border-stone-200/60 shrink-0"
+                className="w-12 h-12 rounded-lg object-contain bg-stone-100 border border-stone-200/60 shrink-0 p-1"
+                onError={(e) => {
+                  e.currentTarget.onerror = null;
+                  e.currentTarget.src = '/images/logo-icon.png';
+                }}
               />
               <div className="flex-grow min-w-0">
                 <h3 className="text-sm font-bold text-[#10131E] truncate">
                   {item.name}
                 </h3>
                 <p className="text-xs text-[#7E8594] mt-0.5">
-                  Qty {item.quantity || 1} · ${(item.price * (item.quantity || 1)).toFixed(2)}
+                  Qty {item.quantity || 1} · ${(Number(item.price) * (item.quantity || 1)).toFixed(2)}
                 </p>
               </div>
+
+              {/* Remove item button */}
+              <button
+                type="button"
+                onClick={() => handleRemove(item.id)}
+                className="p-1.5 text-stone-400 hover:text-red-500 hover:bg-stone-100 rounded-md transition-colors"
+                aria-label={`Remove ${item.name} from cart`}
+                title="Remove item"
+              >
+                <FiTrash2 className="w-4 h-4" />
+              </button>
             </div>
-          );
-        })}
+          ))
+        )}
       </div>
 
       {/* Cost breakdown */}
