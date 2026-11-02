@@ -153,17 +153,16 @@ export default function Purchase() {
                   {filteredCatalog.map((product) => {
                     const qty = quantities[product.id] || 0;
                     
-                    // Force the correct local image path based on the product name
-                    let correctImage = product.image;
-                    const name = (product.name || "").toLowerCase();
-                    
                     return (
                       <div key={product.id} className="bg-[#121622] border border-white/10 rounded-2xl overflow-hidden p-5 flex flex-col">
                         
                         <img 
-                          src={correctImage} 
+                          src={product.image || '/images/placeholder.jpg'} 
                           alt={product.name} 
                           className="w-full h-48 object-contain rounded-xl mb-4 bg-black/20" 
+                          onError={(e) => {
+                            e.target.src = '/images/placeholder.jpg';
+                          }}
                         />
                         
                         <div className="flex items-baseline justify-between gap-2">
@@ -190,14 +189,41 @@ export default function Purchase() {
                   <span className="px-2.5 py-0.5 rounded-full bg-[#C3F85C] text-[#10131E] text-xs font-extrabold">{totalItems} items</span>
                 </div>
                 
-                <div className="pt-4 border-t border-white/10 space-y-2 text-sm mt-6">
+                {/* Render the selected items in the cart */}
+                {selectedList.length > 0 ? (
+                  <div className="py-4 space-y-4 max-h-[400px] overflow-y-auto">
+                    {selectedList.map((item) => (
+                      <div key={item.id} className="flex items-center gap-4">
+                        <img 
+                          src={item.image || '/images/placeholder.jpg'} 
+                          alt={item.name} 
+                          className="w-16 h-16 object-contain bg-black/20 rounded-lg p-1"
+                          onError={(e) => { e.target.src = '/images/placeholder.jpg'; }}
+                        />
+                        <div className="flex-1">
+                          <h4 className="text-sm font-bold text-white line-clamp-1">{item.name}</h4>
+                          <p className="text-xs text-[#949BA8] font-mono">Qty: {item.quantity}</p>
+                        </div>
+                        <div className="text-sm font-bold text-[#C3F85C] font-mono">
+                          ${(item.price * item.quantity).toFixed(2)}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="py-8 text-center text-[#949BA8] text-sm font-mono">
+                    Your cart is empty.
+                  </div>
+                )}
+
+                <div className="pt-4 border-t border-white/10 space-y-2 text-sm mt-4">
                   <div className="flex justify-between text-base font-bold text-white pt-2">
                     <span>Estimated Total</span>
                     <span className="font-mono text-xl text-[#C3F85C]">${subtotal.toFixed(2)}</span>
                   </div>
                 </div>
 
-                <button type="submit" disabled={selectedList.length === 0} className="mt-6 w-full py-3.5 px-6 rounded-xl font-bold text-sm bg-[#C3F85C] text-[#10131E] flex justify-center items-center gap-2">
+                <button type="submit" disabled={selectedList.length === 0} className="mt-6 w-full py-3.5 px-6 rounded-xl font-bold text-sm bg-[#C3F85C] text-[#10131E] flex justify-center items-center gap-2 transition-transform active:scale-95">
                   <span>Proceed to Payment</span>
                   <FiArrowRight />
                 </button>
