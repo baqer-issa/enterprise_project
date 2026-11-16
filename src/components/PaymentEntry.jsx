@@ -343,7 +343,7 @@ export default function PaymentEntry() {
                   </button>
 
                   <Link
-                    to="/purchase/viewOrder"
+                    to="/purchase"
                     className="text-xs sm:text-sm text-[#5D6475] hover:text-[#10131E] font-medium transition-colors text-center sm:text-left"
                   >
                     ← Back to cart
